@@ -1,0 +1,5 @@
+= Retort
+
+rtorrent xmlrpc wrapper written in ruby (1.9). Designed to decouple the 
+xmlrpc interface from the underlying ruby objects.
+
