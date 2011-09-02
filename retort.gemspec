@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.summary     = "An rTorrent xmlrpc wrapper written in ruby"
   s.description = s.summary
-  s.homepage    = "http://github.com/mcmorgan/retort"
+  s.homepage    = "https://github.com/mcmorgan/retort"
 
   s.files = Dir.glob("lib/**/*.rb")
 end
