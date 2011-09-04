@@ -1,11 +1,11 @@
-module Retort 
+module Retort
 
   class Config
     attr_accessor :url
   end
 
   class Service
-  
+
     class << self
 
       def configure

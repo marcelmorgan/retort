@@ -1,29 +1,16 @@
 class Fixnum
-  def bytes
-    self
+  def truth
+    return [false,true][self] if (0..1).member? self
   end
-
-  def kilobytes
-    bytes / 1024.0
-  end
-
-  def kbs
-    "#{sprintf('%.2f', kilobytes)}KB/s"
-  end
-
-  def megabytes
-    kilobytes / 1024.0
-  end
-
 end
 
 class Float
-  def percent
+  def percent_raw
     (self * 100).to_i
-  end 
+  end
 
-  def fmt
-    "#{sprintf('%.2f', self)}"
+  def percent
+    "#{sprintf('%.2f', percent_raw)}"
   end
 end
 

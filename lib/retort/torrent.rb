@@ -1,38 +1,45 @@
-module Retort 
+module Retort
+
+  class Exception; end
 
   class Torrent
-  
+    extend Retort::Conversion
+
     class << self
-      def attr_mappings 
-        {
-          info_hash:          'd.hash',
-          name:               'd.name',
-          connection_current: 'd.connection_current',
-          size_bytes:         'd.size_bytes',
-          completed_bytes:    'd.completed_bytes',
-          creation_date:      'd.creation_date',
-          bytes_done:         'd.bytes_done',
-          up_rate:            'd.up.rate',
-          down_rate:          'd.down.rate',
-          seeders:            'd.peers_complete',
-          leechers:           'd.peers_connected',
-          is_completed:       'd.complete',
-          is_active:          'd.is_active',
-          is_hash_checked:    'd.is_hash_checked',
-          is_hash_checking:   'd.is_hash_checking',
-          is_multifile:       'd.is_multi_file',
-          is_open:            'd.is_open'
-        }
+      def attr_mappings
+
+        build(:d) do |t|
+          t.info_hash           name: 'hash'
+          t.name
+          t.connection_current
+          t.size                name: 'size_bytes',       type: :size
+          t.completed           name: 'completed_bytes',  type: :size
+          t.creation_date       name: 'creation_date',    type: :date
+          t.downloaded          name: 'bytes_done',       type: :size
+          t.up_rate             name: 'up.rate',          type: :size
+          t.down_rate           name: 'down.rate',        type: :size
+          t.message             name: 'get_message'
+          t.seeders             name: 'peers_complete'
+          t.leechers            name: 'peers_connected'
+          t.state
+          t.complete
+          t.is_active
+          t.is_hash_checked
+          t.is_hash_checking
+          t.is_multi_file
+          t.is_open
+        end
+
       end
 
       def all(view="main")
         methods = attr_mappings.map {|key,value| "#{value}="}
-        Service.call("d.multicall", view, *methods).map do |r| 
+        Service.call("d.multicall", view, *methods).map do |r|
           attributes = Hash[attr_mappings.keys.zip(r)]
           Torrent.new attributes
         end
       end
-      
+
       def views
         Service.call "view.list"
       end
@@ -49,9 +56,37 @@ module Retort
     attr_accessor *(attr_mappings.keys)
 
     def initialize(attributes)
+
       attributes.each do |attrib, value|
-         self.instance_variable_set "@#{attrib}".to_sym, value
+        variable = "@#{attrib}".to_sym
+        self.instance_variable_set variable, value
+        if attrib =~ /is_/
+          bool_value = value.truth
+          variable = "@#{attrib.to_s.gsub(/is_/, "")}".to_sym
+          self.instance_variable_set variable, bool_value
+        end
       end
+
+    end
+
+    def status
+      return "complete" if @complete.truth
+    end
+
+    def actions
+      actions = []
+
+      actions << (@state.truth ? :stop : :start)
+      #actions << :check_hash unless @hash_checking
+      actions << (@open ? :close : :open)
+
+      unless @complete.truth
+        actions << (@active ? :pause : :resume)
+      end
+
+      actions << :erase
+
+      actions
     end
   end
 end
