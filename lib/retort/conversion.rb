@@ -1,22 +1,24 @@
-module Retort::Conversion
+class Retort::Rtorrent
 
+    TYPES = {
+      time: 'to_time',
+      date: 'to_date',
+      size: 'to_xb'
+    }
 
-  class Call
-    TYPES = { time: 'to_time', date: 'to_date', size: 'to_xb' }
-    attr_accessor :attributes
+    attr_accessor :attributes, :attributes_raw
 
     def initialize(prefix)
       @attributes = {}
+      @attributes_raw = {}
       @prefix = prefix
     end
 
-    def method_missing(*args, &block)
-      property = args.shift
-      options = args.shift || {}
-
+    def attribute(property, options = {}, &block)
       type = options[:type]
       method_name = options[:name] || property
       method_name = "#{@prefix}.#{method_name}" unless @prefix.empty?
+      @attributes_raw[property] = method_name
 
       if TYPES.member? type
         #Syntax is 'to_*=$.....'. Example : 'to_date=$d.get_creation_date'.
@@ -25,13 +27,14 @@ module Retort::Conversion
       end
       @attributes[property] = method_name
     end
-  end
 
-  def build(prefix="")
-    c = Call.new prefix
-    yield c
-    c.attributes
-  end
+    alias method_missing attribute
+
+    def self.build(prefix="", &block)
+      c = new(prefix)
+      c.instance_eval(&block)
+      c.attributes
+    end
 
 end
 

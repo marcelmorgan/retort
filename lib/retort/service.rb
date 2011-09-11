@@ -14,8 +14,14 @@ module Retort
         @@service = XMLRPC::Client.new2(config.url)
       end
 
+      # by default, if configure hasn't been call the url will be defaulted
+      # to http://localhost/RPC2
+      def service
+        @@service ||= XMLRPC::Client.new2("http://elijah/RPC2")
+      end
+
       def call(*args)
-        @@service.call_async *args
+        service.call_async *args
       end
 
     end

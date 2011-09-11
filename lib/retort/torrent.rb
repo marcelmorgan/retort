@@ -2,34 +2,31 @@ module Retort
 
   class Exception; end
 
-  class Torrent
-    extend Retort::Conversion
+  class Torrent < Rtorrent
 
     class << self
       def attr_mappings
-
-        build(:d) do |t|
-          t.info_hash           name: 'hash'
-          t.name
-          t.connection_current
-          t.size                name: 'size_bytes',       type: :size
-          t.completed           name: 'completed_bytes',  type: :size
-          t.creation_date       name: 'creation_date',    type: :date
-          t.downloaded          name: 'bytes_done',       type: :size
-          t.up_rate             name: 'up.rate',          type: :size
-          t.down_rate           name: 'down.rate',        type: :size
-          t.message             name: 'get_message'
-          t.seeders             name: 'peers_complete'
-          t.leechers            name: 'peers_connected'
-          t.state
-          t.complete
-          t.is_active
-          t.is_hash_checked
-          t.is_hash_checking
-          t.is_multi_file
-          t.is_open
+        @@mappings ||= build(:d) do
+          info_hash           name: 'hash'
+          name
+          connection_current
+          size                name: 'size_bytes',       type: :size
+          completed           name: 'completed_bytes',  type: :size
+          creation_date       name: 'creation_date',    type: :date
+          downloaded          name: 'bytes_done',       type: :size
+          up_rate             name: 'up.rate',          type: :size
+          down_rate           name: 'down.rate',        type: :size
+          message             name: 'get_message'
+          seeders             name: 'peers_complete'
+          leechers            name: 'peers_connected'
+          state
+          complete
+          is_active
+          is_hash_checked
+          is_hash_checking
+          is_multi_file
+          is_open
         end
-
       end
 
       def all(view="main")
