@@ -1,5 +1,35 @@
 = Retort
 
-rtorrent xmlrpc wrapper written in ruby (1.9). Designed to decouple the 
+rtorrent xmlrpc wrapper written in ruby (1.9). Designed to decouple the
 xmlrpc interface from the underlying ruby objects.
 
+== Basic usage
+
+Update your Gemfile with this and do a bundle install:
+
+  gem 'retort'
+
+To get a list of all torrents:
+
+  require 'retort'
+  Retort::Torrent.all
+
+== Contributions
+
+To fetch & test the library for development, do:
+
+  $ git clone https://github.com/mcmorgan/retort
+  $ cd retort
+  $ bundle
+  $ bundle exec rspec spec
+
+If you want to contribute, please:
+
+  * Fork the project.
+  * Make your feature addition or bug fix.
+  * Add tests for it. This is important so I don't break it in a future version unintentionally.
+  * Send me a pull request on Github.
+
+== Copyright
+
+Copyright (c) 2010-2011 Marcel Morgan. See LICENSE for details.
