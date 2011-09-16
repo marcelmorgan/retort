@@ -4,35 +4,34 @@ module Retort
 
   class Torrent < Rtorrent
 
+    setup :d do
+      info_hash           name: 'hash'
+      name
+      connection_current
+      size                name: 'size_bytes',       type: :size
+      completed           name: 'completed_bytes',  type: :size
+      creation_date       name: 'creation_date',    type: :date
+      downloaded          name: 'bytes_done',       type: :size
+      up_rate             name: 'up.rate',          type: :size
+      down_rate           name: 'down.rate',        type: :size
+      message             name: 'get_message'
+      seeders             name: 'peers_complete'
+      leechers            name: 'peers_connected'
+      state
+      complete
+      is_active
+      is_hash_checked
+      is_hash_checking
+      is_multi_file
+      is_open
+    end
+
     class << self
-      def attr_mappings
-        @@mappings ||= build(:d) do
-          info_hash           name: 'hash'
-          name
-          connection_current
-          size                name: 'size_bytes',       type: :size
-          completed           name: 'completed_bytes',  type: :size
-          creation_date       name: 'creation_date',    type: :date
-          downloaded          name: 'bytes_done',       type: :size
-          up_rate             name: 'up.rate',          type: :size
-          down_rate           name: 'down.rate',        type: :size
-          message             name: 'get_message'
-          seeders             name: 'peers_complete'
-          leechers            name: 'peers_connected'
-          state
-          complete
-          is_active
-          is_hash_checked
-          is_hash_checking
-          is_multi_file
-          is_open
-        end
-      end
 
       def all(view="main")
-        methods = attr_mappings.map {|key,value| "#{value}="}
+        methods = attributes.map {|key,value| "#{value}="}
         Service.call("d.multicall", view, *methods).map do |r|
-          attributes = Hash[attr_mappings.keys.zip(r)]
+          attributes = Hash[self.attributes.keys.zip(r)]
           Torrent.new attributes
         end
       end
@@ -50,7 +49,7 @@ module Retort
       end
     end
 
-    attr_accessor *(attr_mappings.keys)
+    attr_accessor *(attributes.keys)
 
     def initialize(attributes)
 
