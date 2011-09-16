@@ -65,6 +65,10 @@ module Retort
 
     end
 
+    def completed_ratio
+      self.completed_raw/(self.size_raw.to_f)
+    end
+
     def status
       return "complete" if @complete.truth
     end

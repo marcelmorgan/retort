@@ -10,7 +10,7 @@ class Float
   end
 
   def percent
-    "#{sprintf('%.2f', percent_raw)}"
+    "#{percent_raw}%"
   end
 end
 
