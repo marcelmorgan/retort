@@ -5,12 +5,8 @@ class Fixnum
 end
 
 class Float
-  def percent_raw
-    (self * 100).to_i
-  end
-
   def percent
-    "#{percent_raw}%"
+    (self * 100).to_i
   end
 end
 
