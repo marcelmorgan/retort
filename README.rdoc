@@ -12,7 +12,14 @@ Update your Gemfile with this and do a bundle install:
 To get a list of all torrents:
 
   require 'retort'
-  Retort::Torrent.all
+  torrents  = Retort::Torrent.all
+  torrent   = torrents.first
+
+  files     = torrent.files
+  file      = files.first
+
+  file.set_priority(Retort::File::PRIORITY_HIGH) # sets the priority
+  torrent.commit_priorities # this is supposed to be an expensive call
 
 == Contributions
 
