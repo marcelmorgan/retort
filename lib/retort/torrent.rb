@@ -88,6 +88,13 @@ module Retort
 
       actions
     end
+    def files
+      File.all(self.info_hash)
+    end
+    def commit_priorities
+      Service.call("d.update_priorities",self.info_hash)
+    end
+
   end
 end
 
