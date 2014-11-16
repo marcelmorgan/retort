@@ -12,7 +12,9 @@ Update your Gemfile with this and do a bundle install:
 To get a list of all torrents:
 
   require 'retort'
-  Retort::Service.configure {|config| config.url = 'https://username:password@your.server.com/path/to/rtorrent/rpc'}
+  Retort::Service.configure do |config| 
+    config.url = 'https://username:password@your.server.com/path/to/rtorrent/rpc'
+  end
   torrents  = Retort::Torrent.all
   torrent   = torrents.first
 
