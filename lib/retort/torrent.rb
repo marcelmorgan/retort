@@ -6,7 +6,7 @@ module Retort
 
     setup :d do
       info_hash           name: 'hash'
-      name
+      torrent_name        name: 'name'
       connection_current
       size                name: 'size_bytes',       type: :size
       completed           name: 'completed_bytes',  type: :size
